@@ -261,6 +261,13 @@ var EasyUIUtils = {
             $(id).combobox('setValue', defaultValue);
         }
     },
+    fillMultiCombox: function (id, act, list, defaultValue) {
+        $(id).combobox('clear');
+        for (var i = 0; i < list.length; i++) {
+            var item = list[i];
+        }
+        $(id).combobox('loadData', list);
+    },
     toPropertygridRows: function (options) {
         var rows = [];
         for (var key in options) {

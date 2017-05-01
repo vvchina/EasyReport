@@ -623,6 +623,76 @@ public class RoleExample {
             addCriterion("sequence not between", value1, value2, "sequence");
             return (Criteria) this;
         }
+        
+        public Criteria andCategoryIdsIsNull() {
+            addCriterion("category_ids is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsIsNotNull() {
+            addCriterion("category_ids is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsEqualTo(String value) {
+            addCriterion("category_ids =", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsNotEqualTo(String value) {
+            addCriterion("category_ids <>", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsGreaterThan(String value) {
+            addCriterion("category_ids >", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsGreaterThanOrEqualTo(String value) {
+            addCriterion("category_ids >=", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsLessThan(String value) {
+            addCriterion("category_ids <", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsLessThanOrEqualTo(String value) {
+            addCriterion("category_ids <=", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsLike(String value) {
+            addCriterion("category_ids like", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsNotLike(String value) {
+            addCriterion("category_ids not like", value, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsIn(List<String> values) {
+            addCriterion("category_ids in", values, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsNotIn(List<String> values) {
+            addCriterion("category_ids not in", values, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsBetween(String value1, String value2) {
+            addCriterion("category_ids between", value1, value2, "categoryIds");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryIdsNotBetween(String value1, String value2) {
+            addCriterion("category_ids not between", value1, value2, "categoryIds");
+            return (Criteria) this;
+        }
 
         public Criteria andCommentIsNull() {
             addCriterion("comment is null");

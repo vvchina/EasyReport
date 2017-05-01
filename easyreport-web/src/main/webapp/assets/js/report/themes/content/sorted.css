@@ -1,0 +1,75 @@
+body, span, div, p, table, td, th, tr {
+    padding: 0px;
+    margin: 0px;
+    font-size: 11px;
+    font-family: "Microsoft Yahei", "微软雅黑", Tahoma, Arial, Helvetica, STHeiti;
+}
+
+#margindiv, #chartdiv{
+	background:#fff;
+    padding: 0px;
+    margin: 0px;
+    font-size: 11px;
+    font-family: "Microsoft Yahei", "微软雅黑", Tahoma, Arial, Helvetica, STHeiti;
+}
+
+#chart {
+	width: 1000px;
+	height: 500px;
+	background: #fff;
+	padding: 0px;
+	margin: 0px;
+	font-size: 11px;
+	font-family: "Microsoft Yahei", "微软雅黑", Tahoma, Arial, Helvetica,
+		STHeiti;
+}
+
+.designer-table td {
+    border: solid 0.1px #e6e6e6
+}
+
+table th {vertical-align:top;}
+#config th {text-shadow:none;}
+table td.info { background: #eee; }
+table.info {border:#000 1px solid;border-collapse:collapse;margin:10px 0 0 10px;}
+table.tablesorter table.info tbody th,table.tablesorter table.info td {border:#000 1px solid;}
+table.tablesorter table.info tbody th {background:#eee;}
+table.options {width:100%;}
+table.options pre {width:95%;}
+table.options .property, .setwidth {width:115px;}
+table.options .type {width:100px; }
+table.options .defaults {width:160px;}
+table.options .examples {width:60px;}
+table.options thead th:nth-child(1) { width: 1%; }
+table.options thead .defaults { width: 1%; }
+table.compatibility { width: 50%; float: right; font-size: .8em; margin-left: 20px; }
+table.compatibility th,table.compatibility td { text-align: center; padding: 2px; }
+
+.tablesorter { margin-top: 11px; }
+
+.wrapper {
+	position: relative;
+	padding: 0 5px;
+	height: 250px;
+	overflow-y: auto;
+}
+
+/* Magnific popup */
+#table-report-htmltext-div {
+	top: 10px;
+	position: relative;
+	background: #fff;
+	padding: 20px;
+	width: auto;
+	margin: 20px auto;
+}
+/* Since the popup has a 20px margin, we need to adjust the wrapper position
+Note:
+ this is only required because we aren't actually attaching the sticky header
+ to the #popup, instead we're attaching it to the .mfp-wrap because that
+ element scrolls instead of the window
+*/
+#table-report-htmltext-div .tablesorter-sticky-wrapper {
+	margin-left: 20px;
+	margin-top: -20px;
+}

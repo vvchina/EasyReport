@@ -53,6 +53,13 @@
                                            data-options="required:true" style="width: 380px"/></td>
                     <input id="roleId" type="hidden" name="id"/>
                 </tr>
+                <tr>
+                    <td>{{info.role_categorys}}</td>
+                    <td colspan="3"><select class="easyui-combobox" id="categoryIds" name="categoryIds"
+                                        data-options="valueField:'id',textField:'name',multiple: true,limitToList: true"
+                                        style="width:150px">
+                            </select>
+                </tr>
             </table>
         </center>
     </form>

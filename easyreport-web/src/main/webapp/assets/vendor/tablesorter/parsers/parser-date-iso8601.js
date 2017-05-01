@@ -1,12 +1,12 @@
-/*! ISO-8601 date parser - 10/26/2014 (v2.18.0)
- * This parser will work with dates in ISO8601 format
+/*! Parser: ISO-8601 date - updated 10/26/2014 (v2.18.0) */
+/* This parser works with dates in ISO8601 format
  * 2013-02-18T18:18:44+00:00
  * Written by Sean Ellingham :https://github.com/seanellingham
  * See https://github.com/Mottie/tablesorter/issues/247
  */
 /*global jQuery: false */
 ;(function($){
-"use strict";
+	'use strict';
 
 	var iso8601date = /^([0-9]{4})(-([0-9]{2})(-([0-9]{2})(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?$/;
 

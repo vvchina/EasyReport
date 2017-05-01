@@ -136,7 +136,12 @@
                                        data-options="required:true,validType:'digit'" style="width:100px"/>
                             </td>
                             <td>{{info.report_disign_conf_category}}</td>
-                            <td><label id="report-category-name"/></td>
+                            <td>
+                            <select class="easyui-combobox" id="report-categoryId" name="categoryId"
+                                        data-options="required:true,valueField:'id',textField:'name'"
+                                        style="width:150px">
+                            </select>
+                            </td>
                         </tr>
                         <tr>
                             <td>{{info.report_disign_conf_sql}}</td>
@@ -144,7 +149,7 @@
                                 <textarea id="report-sqlText" name="sqlText"></textarea>
                                 <input type="hidden" id="report-id" name="id" value=""/>
                                 <input type="hidden" id="report-uid" name="uid"/>
-                                <input type="hidden" id="report-categoryId" name="categoryId" value="0"/>
+                                <!--input type="hidden" id="report-categoryId" name="categoryId" value="0"/-->
                                 <input type="hidden" id="report-sqlTextIsChange" name="isChange" value="0"/>
                                 <input type="hidden" id="report-queryParams" name="queryParams"/>
                                 <input type="hidden" id="report-comment" name="comment" value=""/>

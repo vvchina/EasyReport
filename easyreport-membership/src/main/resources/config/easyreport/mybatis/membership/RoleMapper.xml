@@ -11,6 +11,7 @@
         <result column="is_system" property="isSystem" jdbcType="TINYINT"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="sequence" property="sequence" jdbcType="INTEGER"/>
+        <result column="category_ids" property="categoryIds" jdbcType="VARCHAR"/>
         <result column="comment" property="comment" jdbcType="VARCHAR"/>
         <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
         <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP"/>
@@ -77,7 +78,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List_Without_Id">
-  	  modules ,permissions ,name ,code ,is_system ,status ,sequence ,comment ,create_user ,gmt_created ,gmt_modified
+  	  modules ,permissions ,name ,code ,is_system ,status ,sequence, category_ids ,comment ,create_user ,gmt_created ,gmt_modified
     </sql>
     <sql id="Base_Column_List">
         id ,
@@ -91,6 +92,7 @@
         <if test="isSystem != null">is_system,</if>
         <if test="status != null">status,</if>
         <if test="sequence != null">sequence,</if>
+        <if test="categoryIds != null">category_ids,</if>
         <if test="comment != null">comment,</if>
         <if test="createUser != null">create_user,</if>
         <if test="gmtCreated != null">gmt_created,</if>
@@ -104,6 +106,7 @@
         <if test="isSystem != null">#{isSystem,jdbcType=TINYINT},</if>
         <if test="status != null">#{status,jdbcType=TINYINT},</if>
         <if test="sequence != null">#{sequence,jdbcType=INTEGER},</if>
+        <if test="categoryIds != null">#{categoryIds,jdbcType=VARCHAR},</if>
         <if test="comment != null">#{comment,jdbcType=VARCHAR},</if>
         <if test="createUser != null">#{createUser,jdbcType=VARCHAR},</if>
         <if test="gmtCreated != null">#{gmtCreated,jdbcType=TIMESTAMP},</if>
@@ -117,6 +120,7 @@
         #{item.isSystem,jdbcType=TINYINT},
         #{item.status,jdbcType=TINYINT},
         #{item.sequence,jdbcType=INTEGER},
+        #{item.categoryIds,jdbcType=VARCHAR},
         #{item.comment,jdbcType=VARCHAR},
         #{item.createUser,jdbcType=VARCHAR},
         #{item.gmtCreated,jdbcType=TIMESTAMP},
@@ -130,6 +134,7 @@
         <if test="isSystem != null">is_system = #{isSystem,jdbcType=TINYINT} ,</if>
         <if test="status != null">status = #{status,jdbcType=TINYINT} ,</if>
         <if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER} ,</if>
+        <if test="categoryIds != null">category_ids = #{categoryIds,jdbcType=VARCHAR} ,</if>
         <if test="comment != null">comment = #{comment,jdbcType=VARCHAR} ,</if>
         <if test="createUser != null">create_user = #{createUser,jdbcType=VARCHAR} ,</if>
         <if test="gmtCreated != null">gmt_created = #{gmtCreated,jdbcType=TIMESTAMP} ,</if>
@@ -143,6 +148,7 @@
         <if test="record.isSystem != null">is_system = #{set.isSystem,jdbcType=TINYINT} ,</if>
         <if test="record.status != null">status = #{set.status,jdbcType=TINYINT} ,</if>
         <if test="record.sequence != null">sequence = #{set.sequence,jdbcType=INTEGER} ,</if>
+        <if test="record.categoryIds != null">category_ids = #{set.categoryIds,jdbcType=VARCHAR} ,</if>
         <if test="record.comment != null">comment = #{set.comment,jdbcType=VARCHAR} ,</if>
         <if test="record.createUser != null">create_user = #{set.createUser,jdbcType=VARCHAR} ,</if>
         <if test="record.gmtCreated != null">gmt_created = #{set.gmtCreated,jdbcType=TIMESTAMP} ,</if>
@@ -156,6 +162,7 @@
         is_system = #{item.isSystem,jdbcType=TINYINT} ,
         status = #{item.status,jdbcType=TINYINT} ,
         sequence = #{item.sequence,jdbcType=INTEGER} ,
+        category_ids = #{item.categoryIds,jdbcType=VARCHAR} ,
         comment = #{item.comment,jdbcType=VARCHAR} ,
         create_user = #{item.createUser,jdbcType=VARCHAR} ,
         gmt_created = #{item.gmtCreated,jdbcType=TIMESTAMP} ,

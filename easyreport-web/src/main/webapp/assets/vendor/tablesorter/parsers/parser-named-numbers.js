@@ -1,9 +1,9 @@
-/*! Named Numbers Parser - 10/26/2014 (v2.18.0)
+/*! Parser: namedNumbers - updated 10/26/2014 (v2.18.0) *//*
  * code modified from http://stackoverflow.com/a/12014376/145346
  */
 /*jshint jquery:true */
 ;(function($){
-"use strict";
+	'use strict';
 
 	// Change language of the named numbers as needed
 	var named = {
@@ -81,12 +81,13 @@
 	},
 	result, group,
 	negativeRegex = new RegExp('(' + named.negative.join('|') + ')'),
-	calc = function ( word, table ) {
-		var num = named.numbers.hasOwnProperty( word ) ? named.numbers[ word ] : null,
+	calc = function ( rawWord, table ) {
+		// remove extra characters that might be next to the word
+		var word = rawWord.replace( /[,."']/g, '' ),
+			// formatFloat will deal with the commas & decimals in the number format
+			num = $.tablesorter.formatFloat( rawWord || '', table ),
 			power = named.powers.hasOwnProperty( word ) ? named.powers[ word ] : null;
-		if ( !num && !isNaN( word ) ) {
-			num = $.tablesorter.formatFloat( word || '', table );
-		}
+		num = typeof num === 'number' ? num : named.numbers.hasOwnProperty( word ) ? named.numbers[ word ] : null;
 		if ( num !== null ) {
 			group += num;
 		} else if ( word === named.hundred ) {
@@ -98,7 +99,7 @@
 	};
 
 	$.tablesorter.addParser({
-		id: "namedNumbers",
+		id: 'namedNumbers',
 		is: function () {
 			return false;
 		},
@@ -115,7 +116,7 @@
 			// make sure to let zero get parsed, so check hasOwnProperty
 			return result || named.numbers.hasOwnProperty( str ) ? result : $.tablesorter.formatFloat( str || '', table );
 		},
-		type: "numeric"
+		type: 'numeric'
 	});
 
 })( jQuery );

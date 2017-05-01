@@ -31,6 +31,7 @@ var DesignerCommon = {
     baseUrl: EasyReport.ctxPath + '/rest/metadata/report/',
     baseHistoryUrl: EasyReport.ctxPath + '/rest/metadata/history/',
     baseDsUrl: EasyReport.ctxPath + '/rest/metadata/ds/',
+    basecategoryUrl: EasyReport.ctxPath + '/rest/metadata/category/',
     baseIconUrl: EasyReport.ctxPath + '/assets/custom/easyui/themes/icons/',
     baseReportUrl: EasyReport.ctxPath + '/report/'
 };
@@ -82,6 +83,12 @@ var DesignerMVC = {
                 url: DesignerCommon.baseDsUrl + 'listAll',
                 method: 'GET'
             }
+        },
+        Category:{
+        	getCategorys: {
+        		url: DesignerCommon.basecategoryUrl + 'getCategorys',
+        		method: 'GET'
+        	}
         },
         Report: {
             url: DesignerCommon.baseReportUrl + 'uid/',
@@ -152,7 +159,8 @@ var DesignerMVC = {
             text: 'design.char.desc',
             value: 4
         }],
-        DataSourceList: []
+        DataSourceList: [],
+        CategoryList: []
     },
     View: {
         SqlEditor: null,
@@ -938,6 +946,7 @@ var DesignerMVC = {
         },
         initData: function () {
             DesignerMVC.Data.loadDataSourceList();
+            DesignerMVC.Data.loadCategoryList();
         }
     },
     Controller: {
@@ -1545,6 +1554,16 @@ var DesignerMVC = {
                 DesignerMVC.Model.DataSourceList = result.data;
                 EasyUIUtils.fillCombox("#report-dsId", "add", result.data, "");
             });
+        },
+        loadCategoryList: function () {
+            $.getJSON(DesignerMVC.URLs.Category.getCategorys.url, function (result) {
+                if (!result.success) {
+                    console.info(result.msg);
+                }
+                DesignerMVC.Model.CategoryList = result.data;
+                EasyUIUtils.fillCombox("#report-categoryId", "add", result.data, "");
+            });
         }
+    
     }
 };

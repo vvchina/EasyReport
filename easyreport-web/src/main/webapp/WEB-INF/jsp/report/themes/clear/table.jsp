@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="${ctxPath}/assets/vendor/tablesorter/css/theme.dark.css?v=${version}"/>
     <link rel="stylesheet" href="${ctxPath}/assets/js/report/themes/clear/default.css?v=${version}"/>
     <script src="${ctxPath}/assets/vendor/tablesorter/jquery.tablesorter.min.js?v=${version}"></script>
-    <script src="${ctxPath}/assets/vendor/jquery.fixtableheader.js/vendor/jquery.fixtableheader.js?v=${version}"></script>
+    <script src="${ctxPath}/assets/vendor/jquery.fixedheadertable.min.js?v=${version}"></script>
     <script src="${ctxPath}/assets/js/report/themes/clear/table.js?v=${version}"></script>
 </head>
 <body ng-app="i18n" ng-controller="translate">

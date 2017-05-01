@@ -30,6 +30,8 @@ var TableReportMVC = {
     View: {
         initControl: function () {
             $.parser.parse('#table-report-div');
+        	$("#chart").hide();
+        	TableReportMVC.Util.openchart(null);
         },
         bindEvent: function () {
             $('#btn-generate').click(TableReportMVC.Controller.generate);
@@ -67,7 +69,23 @@ var TableReportMVC = {
                 },
                 success: function (result) {
                     if (result.success) {
-                        $('#table-report-htmltext-div').html(result.data.htmlTable);
+                    	var exportexcelbtn="<div id=\"margindiv\">"
+                    		+"<img id=\"btn-export-excel\" title=\""+jQuery.i18n.prop("info.table_export_excel")+"\" style=\"cursor: pointer;padding-right: 5px;\" src=\""+TableReportCommon.baseUrl+"/../assets/custom/easyui/themes/icons/excel_24.png\"/>"
+                    		+"<img id=\"chartlink\" style=\"cursor: pointer;padding-right: 5px;\" src=\""+TableReportCommon.baseUrl+"/../assets/custom/easyui/themes/icons/chart_24.png\"/>"
+                    	+"</div>";
+                        $('#table-report-htmltext-div').html(exportexcelbtn+result.data.htmlTable);
+                		$("#chartlink").on('click', function(){
+                			$.magnificPopup.instance.close();
+                			$("#chart").show();
+
+                			if(!$("#chart").is(":hidden")){
+                				var table = $('#easyreport')[0];
+                				var json = TableReportMVC.Util.tableToJson(table);
+                				TableReportMVC.Util.openchart(json);
+                			}
+                		});
+                        $('#btn-export-excel').click(TableReportMVC.Controller.exportToExcel);
+                        $('#btn-export-excel1').click(TableReportMVC.Controller.exportToExcel);
                         TableReportMVC.Util.render(mode || TableReportMVC.Model.Mode.classic);
                         TableReportMVC.Util.filterTable = TableReportMVC.Util.renderFilterTable(result.data);
                         if (callback instanceof Function) {
@@ -119,17 +137,165 @@ var TableReportMVC = {
         },
         render: function (mode) {
             var table = $("#easyreport");
-            return TableReportMVC.Util.renderClassicTable(table);
+            return TableReportMVC.Util.renderSortedTable(table);
+        },
+    	tableToJson: function(table) {
+     		var data = {};
 
-            /*if (mode == TableReportMVC.Model.Mode.classic) {
-             return TableReportMVC.renderClassicTable(table);
-             }
-             // 如果为dt模式但是表格存在跨行
-             // 则转为经典表格模式,因为datatables控件不支持跨行
-             if (TableReportMVC.hasRowSpan()) {
-             return TableReportMVC.renderClassicTable(table);
-             }
-             return TableReportMVC.renderDatatables(table);*/
+        // first row needs to be headers
+        var headers = [];
+        for (var i=0; i<table.rows[0].cells.length; i++) {
+        	headers[i] = table.rows[0].cells[i].innerText.toLowerCase().replace(/ /gi,'');
+        	data[headers[i]] =[];
+        }
+        data["HEADERS"]=headers;
+
+        // go through cells
+        for (var i=1; i<table.rows.length; i++) {
+
+        	var tableRow = table.rows[i];
+        	if($.trim(tableRow.innerText).length==0) continue;
+        	var rowData = {};
+
+        	for (var j=0; j<tableRow.cells.length; j++) {
+        		data[ headers[j] ].push(tableRow.cells[j].innerText);
+
+        	}
+        }       
+
+        return data;
+    },
+    openchart: function(table){
+    	var dom =  document.getElementById("chart");
+    	var myChart = echarts.init(dom);
+    	var app = {};
+    	option = null;
+    	if(table!=null){
+    	option = {
+    		title: {
+    			text: '',
+    		},
+    		tooltip: {
+    			trigger: 'axis'
+    		},
+    		legend: {
+    			data: table['HEADERS'].slice(1),
+    			top: 20,
+    			selected:{}
+    		},
+    		toolbox: {
+    			show: true,
+    			feature: {
+    				dataZoom: {
+    					yAxisIndex: 'none'
+    				},
+    				dataView: {readOnly: false},
+    				magicType: {type: ['line', 'bar','stack','tiled']},
+    				restore: {},
+    				saveAsImage: {}
+    			}
+    		},
+    		xAxis:  {
+    			type: 'category',
+    			boundaryGap: false,
+    			data: table[table['HEADERS'][0]]
+    		},
+    		yAxis: {
+    			type: 'value',
+    			axisLabel: {
+    				formatter: '{value}'
+    			}
+    		},
+    		series: [
+    		]
+    	};
+    	for(var i=1; i<table['HEADERS'].length; i++){
+    		option.series.push({
+    			name: table['HEADERS'][i],
+    			type:'line',
+    			data: table[table['HEADERS'][i]]
+    		});
+    		option.legend.selected[table['HEADERS'][i]]=false;
+    	}
+    	}
+    	
+    	;
+    	if (option && typeof option === "object") {
+    		myChart.setOption(option, true);
+    	}
+    },
+    createSortedTable: function(table) {
+			table.addClass('tablesorter');
+        	table.tablesorter({
+        		theme : 'green',
+        		widthFixed : true,
+        		showProcessing: true,
+        		headerTemplate : '{content} {icon}', // Add icon for various themes
+
+        		widgets: [ 'zebra', 'stickyHeaders', 'filter' ],
+
+        		widgetOptions: {
+
+        			// extra class name added to the sticky header row
+        			stickyHeaders : '',
+        			// number or jquery selector targeting the position:fixed element
+        			stickyHeaders_offset : 0,
+        			// added to table ID, if it exists
+        			stickyHeaders_cloneId : '-sticky',
+        			// trigger "resize" event on headers
+        			stickyHeaders_addResizeEvent : true,
+        			// if false and a caption exist, it won't be included in the sticky header
+        			stickyHeaders_includeCaption : true,
+        			// The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+        			stickyHeaders_zIndex : 2,
+        			// jQuery selector or object to attach sticky header to
+        			stickyHeaders_attachTo : '.mfp-wrap',
+        			// jQuery selector or object to monitor horizontal scroll position (defaults: xScroll > attachTo > window)
+        			stickyHeaders_xScroll : null,
+        			// jQuery selector or object to monitor vertical scroll position (defaults: yScroll > attachTo > window)
+        			stickyHeaders_yScroll : null,
+
+        			// scroll table top into view after filtering
+        			stickyHeaders_filteredToTop: true
+
+        			// *** REMOVED jQuery UI theme due to adding an accordion on this demo page ***
+        			// adding zebra striping, using content and default styles - the ui css removes the background from default
+        			// even and odd class names included for this demo to allow switching themes
+        			// , zebra   : ["ui-widget-content even", "ui-state-default odd"]
+        			// use uitheme widget to apply defauly jquery ui (jui) class names
+        			// see the uitheme demo for more details on how to change the class names
+        			// , uitheme : 'jui'
+        		}
+        	});
+        },
+        renderSortedTable: function (table) {
+        	$('#table-report-htmltext-div').addClass('white-popup');
+        	$('#table-report-htmltext-div').addClass('mfp-hide');
+        	$.magnificPopup.open({
+  			  items: {
+				    src: '#table-report-htmltext-div', // can be a HTML string, jQuery object, or CSS selector
+				    type: 'inline'
+				},
+        		callbacks: {
+        			open: function () {
+        				// Will fire when this exact popup is opened
+        				// this - is Magnific Popup object
+        				TableReportMVC.Util.createSortedTable(table);
+        			}
+        		}
+        	});
+        	$("#tablelink").magnificPopup({
+        		items: {
+        				    src: '#table-report-htmltext-div', // can be a HTML string, jQuery object, or CSS selector
+        				    type: 'inline'
+        				},
+        				callbacks: {
+        					open: function () {
+        						TableReportMVC.Util.createSortedTable(table);
+        				}
+        		}
+        	});
+        	
         },
         renderClassicTable: function (table) {
             $("#easyreport>tbody>tr").click(function () {
@@ -144,7 +310,7 @@ var TableReportMVC = {
             });
 
             var noRowSpan = !TableReportMVC.Util.hasRowSpan();
-            table.data('isSort', noRowSpan).fixScroll();
+//            table.data('isSort', noRowSpan).fixScroll();
 
             //如果表格中没有跨行rowspan(暂不支持跨行)
             if (noRowSpan) {
@@ -159,6 +325,7 @@ var TableReportMVC = {
             }
         },
         renderDatatables: function (table) {
+//        	$('#easyreport').fixedHeaderTable({ footer: true, cloneHeadToFoot: true, fixedColumn: false });
             $('#easyreport').removeClass("easyreport");
             $('#easyreport').addClass('table table-striped table-bordered');
             var dt = $('#easyreport').dataTable({

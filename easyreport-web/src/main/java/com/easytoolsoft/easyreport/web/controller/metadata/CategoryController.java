@@ -5,6 +5,10 @@ import com.easytoolsoft.easyreport.data.helper.PageInfo;
 import com.easytoolsoft.easyreport.domain.metadata.example.CategoryExample;
 import com.easytoolsoft.easyreport.domain.metadata.po.Category;
 import com.easytoolsoft.easyreport.domain.metadata.service.ICategoryService;
+import com.easytoolsoft.easyreport.membership.common.CurrentUser;
+import com.easytoolsoft.easyreport.membership.po.Role;
+import com.easytoolsoft.easyreport.membership.po.User;
+import com.easytoolsoft.easyreport.membership.service.IRoleService;
 import com.easytoolsoft.easyreport.web.controller.common.BaseController;
 import com.easytoolsoft.easyreport.web.spring.aop.OpLog;
 import com.easytoolsoft.easyreport.web.viewmodel.DataGridPager;
@@ -16,10 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
 
 /**
  * 报表类别控制器
@@ -29,13 +36,17 @@ import java.util.Map;
 public class CategoryController
         extends BaseController<ICategoryService, Category, CategoryExample> {
 
+	@Resource
+	private IRoleService roleService;
+	
     @GetMapping(value = "/getCategoryTree")
     @OpLog(name = "获取报表分类树")
     @RequiresPermissions("report.designer:view")
-    public JsonResult getCategoryTree() {
+    public JsonResult getCategoryTree(@CurrentUser User loginUser) {
         JsonResult<Object> result = new JsonResult<>();
-        List<EasyUITreeNode<Category>> roots = new ArrayList<>();
-        List<Category> categories = this.service.getAll();
+        List<EasyUITreeNode<Category>> roots = new ArrayList<>();        
+        List<Category> categories=filterCategorysList(loginUser,this.service.getAll());
+        
         categories.stream().filter(category -> category.getParentId() == 0).forEach(category -> {
             String cateId = Integer.toString(category.getId());
             String text = category.getName();
@@ -43,14 +54,62 @@ public class CategoryController
             String iconCls = category.getHasChild() > 0 ? "icon-categories" : "icon-category";
             EasyUITreeNode<Category> parentNode = new EasyUITreeNode<>(cateId, text, state, category);
             parentNode.setIconCls(iconCls);
-            this.getChildCategories(categories, parentNode);
+            this.getChildCategories(loginUser,categories, parentNode);
             roots.add(parentNode);
         });
         result.setData(roots);
         return result;
     }
+    
+    @GetMapping(value = "/getCategorys")
+    @OpLog(name = "获取报表分类")
+    @RequiresPermissions("report.designer:view")
+    public JsonResult getCategorys(@CurrentUser User loginUser) {
+        JsonResult<Object> result = new JsonResult<>();
+        List<EasyUITreeNode<Category>> roots = new ArrayList<>();
+        List<Category> categories = filterCategorysList(loginUser,this.service.getAll());
+        result.setData(categories);
+        return result;
+    }
 
-    private void getChildCategories(List<Category> categories, EasyUITreeNode<Category> parentNode) {
+    private List<Role> getRoleList(User loginUser){
+    	List<Role> roleList= new ArrayList<Role>();
+    	for(String role: loginUser.getRoles().split(",")){
+    		if(Integer.parseInt(role)>0){
+    			roleList.add(roleService.getById(Integer.parseInt(role)));
+    			
+    		}
+    	}
+    	return roleList;
+    }
+    private List<Category> filterCategorysList(User loginUser,List<Category> org_categories){
+        List<Role> roleList = getRoleList(loginUser);
+        String categoryIds = "";
+        for( Role role: roleList){
+        	categoryIds += (","+role.getCategoryIds());
+        	System.out.println("Role:"+role.getName()+", categoryids:"+role.getCategoryIds());
+        }
+        System.out.println(categoryIds);
+        System.out.println("Length:"+categoryIds.replaceAll(",", "").trim().length());
+        List<Category> new_categories = new ArrayList<Category>();
+        if(categoryIds.replaceAll(",", "").trim().length()!=0){
+        	categoryIds+=(","+0);
+	        for( Category category : org_categories){
+	        	if(Arrays.asList(categoryIds.split(",")).contains(category.getId()+"")){
+	        		new_categories.add(category);
+	        	}
+	        }
+        }else{
+        	new_categories = org_categories;
+        }
+        
+        return new_categories;
+    }
+    
+    private void getChildCategories(User loginUser,List<Category> categories, EasyUITreeNode<Category> parentNode) {
+    	
+    	List<Category> new_categories = filterCategorysList(loginUser,categories);
+    	
         int id = Integer.valueOf(parentNode.getId());
         categories.stream().filter(category -> category.getParentId() == id).forEach(category -> {
             String cateId = Integer.toString(category.getId());
@@ -59,7 +118,7 @@ public class CategoryController
             String iconCls = category.getHasChild() > 0 ? "icon-categories" : "icon-category";
             EasyUITreeNode<Category> childNode = new EasyUITreeNode<>(cateId, text, state, category);
             childNode.setIconCls(iconCls);
-            this.getChildCategories(categories, childNode);
+            this.getChildCategories(loginUser,new_categories, childNode);
             parentNode.getChildren().add(childNode);
         });
     }

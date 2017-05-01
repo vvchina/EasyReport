@@ -53,6 +53,10 @@ public class Role implements Serializable {
      */
     private Integer sequence;
     /**
+     * 支持的category
+     */
+    private String categoryIds;
+    /**
      * 系统角色备注
      */
     private String comment;

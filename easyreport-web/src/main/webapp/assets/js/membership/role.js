@@ -7,12 +7,14 @@ var MembershipRole = {
         RoleMVC.View.initControl();
         RoleMVC.View.bindEvent();
         RoleMVC.View.bindValidate();
+        RoleMVC.View.initData();
     }
 };
 
 var RoleCommon = {
     baseUrl: EasyReport.ctxPath + '/rest/membership/role/',
-    baseIconUrl: EasyReport.ctxPath + '/assets/custom/easyui/themes/icons/'
+    baseIconUrl: EasyReport.ctxPath + '/assets/custom/easyui/themes/icons/',
+    basecategoryUrl: EasyReport.ctxPath + '/rest/metadata/category/'
 };
 
 var RoleMVC = {
@@ -44,7 +46,16 @@ var RoleMVC = {
         isSuperAdmin: {
             url: RoleCommon.baseUrl + 'isSuperAdmin',
             method: 'GET'
+        },
+        Category:{
+        	getCategorys: {
+        		url: RoleCommon.basecategoryUrl + 'getCategorys',
+        		method: 'GET'
+        	}
         }
+    },
+    Model: {
+        CategoryList: []
     },
     View: {
         initControl: function () {
@@ -136,6 +147,12 @@ var RoleMVC = {
                     width: 50,
                     sortable: true
                 }, {
+                    field: 'categoryIds',
+                    title: jQuery.i18n.prop('role.categoryids'),
+                    width: 50,
+                    sortable: true
+                },
+                {
                     field: 'gmtCreated',
                     title: jQuery.i18n.prop('role.gmtcreate'),
                     width: 60,
@@ -237,6 +254,9 @@ var RoleMVC = {
             $('#btn-search').bind('click', RoleMVC.Controller.find);
         },
         bindValidate: function () {
+        },
+        initData: function () {
+        	RoleMVC.Data.loadCategoryList();
         }
     },
     Controller: {
@@ -357,6 +377,17 @@ var RoleMVC = {
                     return node.id;
             });
             return ids.join(',');
+        }
+    },
+    Data: {
+        loadCategoryList: function () {
+            $.getJSON(RoleMVC.URLs.Category.getCategorys.url, function (result) {
+                if (!result.success) {
+                    console.info(result.msg);
+                }
+                RoleMVC.Model.CategoryList = result.data;
+                EasyUIUtils.fillMultiCombox("#categoryIds", "add", result.data, "");
+            });
         }
     }
 };

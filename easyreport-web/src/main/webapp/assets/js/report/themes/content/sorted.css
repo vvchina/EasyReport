@@ -61,6 +61,7 @@ table.compatibility th,table.compatibility td { text-align: center; padding: 2px
 	background: #fff;
 	padding: 20px;
 	width: auto;
+	overflow-x: auto;
 	margin: 20px auto;
 }
 /* Since the popup has a 20px margin, we need to adjust the wrapper position

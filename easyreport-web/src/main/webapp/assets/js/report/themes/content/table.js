@@ -158,7 +158,7 @@ var TableReportMVC = {
         	var rowData = {};
 
         	for (var j=0; j<tableRow.cells.length; j++) {
-        		data[ headers[j] ].push(tableRow.cells[j].innerText);
+        		data[ headers[j] ].push(tableRow.cells[j].innerText.replace(/,/gi,''));
 
         	}
         }       

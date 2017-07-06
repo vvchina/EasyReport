@@ -1189,10 +1189,9 @@ var DesignerMVC = {
                 $.messager.progress("close");
                 if (result.success) {
                     $('#report-sqlTextIsChange').val('0');
-                    var id = $("#report-categoryId").val();
                     return $.messager.alert(jQuery.i18n.prop('design.operation.hint'), jQuery.i18n.prop('design.operation.success'), 'info', function () {
                         $('#report-designer-dlg').dialog('close');
-                        DesignerMVC.Controller.listReports(id);
+                        DesignerMVC.Controller.listReports($("#report-categoryId").text());
                     });
                 }
                 $.messager.alert(jQuery.i18n.prop('design.operation.hint'), result.msg, 'error');
